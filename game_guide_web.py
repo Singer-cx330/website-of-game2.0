@@ -1083,87 +1083,55 @@ class GameGuideWeb:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # 获取当前选择的菜单项
+                # 简单直接地使用 radio 按钮
                 selection = st.radio(
-                    "",
+                    "导航菜单",  # 添加标题
                     list(self.guide.main_menu.values()),
-                    label_visibility="collapsed"
+                    format_func=lambda x: {
+                        "游戏攻略": "🎯 游戏攻略",
+                        "意见征集": "💡 意见征集",
+                        "工作室招募(暂时关闭)": "🏢 工作室招募"
+                    }.get(x, x)
                 )
                 
-                # 根据选择更新导航菜单的激活状态
-                active_class = {
-                    "游戏攻略": " active" if selection == "游戏攻略" else "",
-                    "意见征集": " active" if selection == "意见征集" else "",
-                    "工作室招募(暂时关闭)": " active" if selection == "工作室招募(暂时关闭)" else ""
-                }
-                
-                st.markdown(f"""
-                <div class="nav-menu">
-                    <div class="nav-menu-items">
-                        <label class="nav-item{active_class['游戏攻略']}">
-                            <span class="nav-icon">🎯</span>
-                            <span class="nav-text">游戏攻略</span>
-                        </label>
-                        <label class="nav-item{active_class['意见征集']}">
-                            <span class="nav-icon">💡</span>
-                            <span class="nav-text">意见征集</span>
-                        </label>
-                        <label class="nav-item{active_class['工作室招募(暂时关闭)']}">
-                            <span class="nav-icon">🏢</span>
-                            <span class="nav-text">工作室招募</span>
-                        </label>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # 更新CSS样式
+                # 添加简单的样式
                 st.markdown("""
                 <style>
-                /* 导航菜单项样式 */
-                .nav-item {
-                    display: flex;
-                    align-items: center;
-                    padding: 1rem 1.2rem;
+                .sidebar .sidebar-content {
+                    background: linear-gradient(
+                        180deg,
+                        rgba(15, 23, 42, 0.95),
+                        rgba(23, 37, 84, 0.95)
+                    );
+                }
+                
+                /* Radio按钮样式 */
+                .stRadio > div {
                     background: rgba(30, 58, 138, 0.2);
+                    padding: 1rem;
+                    border-radius: 10px;
+                }
+                
+                .stRadio > div > label {
+                    background: rgba(30, 58, 138, 0.3);
                     border: 1px solid rgba(59, 130, 246, 0.2);
-                    border-radius: 12px;
-                    color: rgba(255, 255, 255, 0.8);
-                    text-decoration: none;
-                    transition: all 0.3s ease;
+                    border-radius: 8px;
+                    padding: 10px 15px;
+                    margin: 5px 0;
                     cursor: pointer;
-                    margin-bottom: 0.8rem;
-                    width: 100%;
-                    box-sizing: border-box;
+                    transition: all 0.3s ease;
                 }
                 
-                .nav-item:hover {
-                    background: rgba(30, 58, 138, 0.4);
+                .stRadio > div > label:hover {
+                    background: rgba(59, 130, 246, 0.2);
                     transform: translateX(5px);
-                    border-color: rgba(59, 130, 246, 0.4);
-                    color: white;
                 }
                 
-                .nav-item.active {
+                /* 选中状态 */
+                .stRadio > div > label[data-checked="true"] {
                     background: rgba(59, 130, 246, 0.3);
                     border-color: rgba(59, 130, 246, 0.6);
                     box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-                    color: white;
-                }
-                
-                /* 让radio按钮可以点击但不可见 */
-                [data-testid="stRadio"] {
-                    position: absolute;
-                    opacity: 0;
-                    width: 100%;
-                    height: 100%;
-                    top: 0;
-                    left: 0;
-                    z-index: 1;
-                }
-                
-                .nav-menu {
-                    position: relative;
-                    z-index: 0;
                 }
                 </style>
                 """, unsafe_allow_html=True)
@@ -1177,51 +1145,42 @@ class GameGuideWeb:
                 self.show_recruitment()
             
     def show_game_guide(self):
-        with st.container():
-            with st.container():
-                st.markdown('<div class="content-container">', unsafe_allow_html=True)
-                
-                # 使用tabs来组织内容
-                tabs = st.tabs([
-                    "🎮 基础指南", "⚔️ 职业系统", "💪 状态属性", "✨ 特色玩法", "📝 更新日志"
-                ])
-                
-                with tabs[0]:
-                    col1, col2 = st.columns([3, 1])
-                    with col1:
-                        guide_selection = st.selectbox(
-                            "选择指南内容",
-                            list(self.guide.game_guide_submenu.values())
-                        )
-                
-                with st.spinner('加载中...'):
-                    time.sleep(0.3)
-                    self.show_guide_content(guide_selection)
-                
-                with tabs[1]:
-                    self.show_profession_content()
-                
-                with tabs[2]:
-                    self.show_status_content()
-                
-                st.markdown('</div>', unsafe_allow_html=True)
+        # 使用tabs来组织内容
+        tabs = st.tabs([
+            "🎮 基础指南", "⚔️ 职业系统", "💪 状态属性", "✨ 特色玩法", "📝 更新日志"
+        ])
+        
+        with tabs[0]:
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                guide_selection = st.selectbox(
+                    "选择指南内容",
+                    list(self.guide.game_guide_submenu.values())
+                )
+        
+        with st.spinner('加载中...'):
+            time.sleep(0.3)
+            self.show_guide_content(guide_selection)
+        
+        with tabs[1]:
+            self.show_profession_content()
+        
+        with tabs[2]:
+            self.show_status_content()
 
     def show_guide_content(self, selection):
         content = self.api.get_game_content(selection)
         st.markdown(f"""
         <div class="glass-card">
             <h3 style="color: white; margin-bottom: 1.5rem;">{selection}</h3>
-            <div class="content-section">
-                <div style="color: rgba(255,255,255,0.9);">
-                    {content.get('content', '内容正在更新中...')}
-                </div>
+            <div style="color: rgba(255,255,255,0.9);">
+                {content.get('content', '内容正在更新中...')}
             </div>
         </div>
         """, unsafe_allow_html=True)
-            
+
     def show_feedback(self):
         """显示意见征集页面"""
-        st.markdown('<div class="fade-in">', unsafe_allow_html=True)
         st.markdown("""
         <div class="page-header">
             <h2>💡 意见征集</h2>
@@ -1288,25 +1247,13 @@ class GameGuideWeb:
         
         with col2:
             # 反馈指南
+            st.markdown("### 📝 反馈指南")
             st.markdown("""
-            <div class="glass-card guide-card">
-                <h4>📝 反馈指南</h4>
-                <ul>
-                    <li>请选择合适的反馈类型</li>
-                    <li>详细描述您的想法和建议</li>
-                    <li>可以附上截图以更好地说明问题</li>
-                    <li>留下联系方式以便我们进一步交流</li>
-                </ul>
-                
-                <h4>🎯 反馈重点</h4>
-                <ul>
-                    <li>游戏平衡性问题</li>
-                    <li>体验优化建议</li>
-                    <li>Bug反馈</li>
-                    <li>新功能建议</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            • 请选择合适的反馈类型
+            • 详细描述您的想法和建议
+            • 可以附上截图以更好地说明问题
+            • 留下联系方式以便我们进一步交流
+            """)
 
     def show_recruitment(self):
         st.markdown('<div class="fade-in">', unsafe_allow_html=True)
