@@ -30,8 +30,8 @@ class GameGuideWeb:
         
         /* 高级梦幻渐变背景 */
         .stApp {
-            background: 
-                linear-gradient(45deg, 
+            background:
+                linear-gradient(45deg,
                     rgba(123, 198, 204, 0.5),
                     rgba(148, 126, 245, 0.5),
                     rgba(238, 156, 167, 0.5)),
@@ -567,13 +567,12 @@ class GameGuideWeb:
             
     def show_game_guide(self):
         with st.container():
-            # 内容容器
             with st.container():
                 st.markdown('<div class="content-container">', unsafe_allow_html=True)
                 
                 # 使用tabs来组织内容
                 tabs = st.tabs([
-                    "🎮 基础指南", "⚔️ 职业系统", "✨ 特色玩法", "📝 更新日志"
+                    "🎮 基础指南", "⚔️ 职业系统", "💫 状态属性", "✨ 特色玩法", "📝 更新日志"
                 ])
                 
                 with tabs[0]:
@@ -584,11 +583,16 @@ class GameGuideWeb:
                             list(self.guide.game_guide_submenu.values())
                         )
                 
-                # 添加内容切换动画
                 with st.spinner('加载中...'):
                     time.sleep(0.3)
                     self.show_guide_content(guide_selection)
-            
+                
+                with tabs[1]:
+                    self.show_profession_content()
+                
+                with tabs[2]:
+                    self.show_status_content()
+                
                 st.markdown('</div>', unsafe_allow_html=True)
 
     def show_guide_content(self, selection):
@@ -684,6 +688,65 @@ class GameGuideWeb:
                         st.info("您已经订阅过了")
             else:
                 st.error("请输入有效的邮箱地址")
+
+    def show_profession_content(self):
+        """显示职业系统内容"""
+        content = self.api.get_game_content("职业系统")
+        
+        for profession, details in content.items():
+            with st.expander(f"🎯 {profession}"):
+                st.markdown(f"""
+                <div class="glass-card">
+                    <h4 style="color: white;">特点</h4>
+                    <p>{details['特点']}</p>
+                    
+                    <h4 style="color: white;">技能</h4>
+                    <ul>
+                        {''.join(f'<li>{skill}</li>' for skill in details['技能'])}
+                    </ul>
+                    
+                    <h4 style="color: white;">推荐装备</h4>
+                    <ul>
+                        {''.join(f'<li>{equip}</li>' for equip in details['装备推荐'])}
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+
+    def show_status_content(self):
+        """显示状态属性内容"""
+        content = self.api.get_game_content("状态属性")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div class="glass-card">
+                <h3 style="color: white;">基础属性</h3>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            for attr, desc in content['基础属性'].items():
+                st.markdown(f"""
+                <div class="glass-card">
+                    <h4 style="color: white;">{attr}</h4>
+                    <p>{desc}</p>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="glass-card">
+                <h3 style="color: white;">特殊状态</h3>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            for status, effect in content['特殊状态'].items():
+                st.markdown(f"""
+                <div class="glass-card">
+                    <h4 style="color: white;">{status}</h4>
+                    <p>{effect}</p>
+                </div>
+                """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     web_guide = GameGuideWeb()
