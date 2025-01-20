@@ -28,66 +28,118 @@ class GameGuideWeb:
             font-family: 'Noto Sans SC', sans-serif;
         }
         
-        /* 高级梦幻渐变背景 */
+        /* 动态深蓝渐变背景 */
         .stApp {
-            background:
-                linear-gradient(45deg,
-                    rgba(123, 198, 204, 0.5),
-                    rgba(148, 126, 245, 0.5),
-                    rgba(238, 156, 167, 0.5)),
+            background: 
+                linear-gradient(45deg, 
+                    rgba(15, 23, 42, 0.95),   /* 深邃蓝 */
+                    rgba(23, 37, 84, 0.95),   /* 靛蓝 */
+                    rgba(30, 58, 138, 0.95)), /* 皇家蓝 */
                 linear-gradient(135deg,
-                    rgba(238, 174, 202, 0.5),
-                    rgba(148, 187, 233, 0.5));
+                    rgba(17, 24, 39, 0.97),   /* 暗蓝 */
+                    rgba(29, 78, 216, 0.97));  /* 亮蓝 */
             background-size: 400% 400%, 300% 300%;
-            animation: gradientBG 20s ease infinite;
+            animation: gradientBG 15s ease infinite;
         }
         
         @keyframes gradientBG {
             0% {
                 background-position: 0% 50%, 100% 50%;
             }
+            25% {
+                background-position: 50% 100%, 50% 0%;
+            }
             50% {
                 background-position: 100% 50%, 0% 50%;
+            }
+            75% {
+                background-position: 50% 0%, 50% 100%;
             }
             100% {
                 background-position: 0% 50%, 100% 50%;
             }
         }
         
-        /* 新拟态玻璃卡片 */
+        /* 动态光效 */
+        .stApp::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%,
+                    rgba(59, 130, 246, 0.1) 0%,
+                    transparent 50%),
+                radial-gradient(circle at 80% 70%,
+                    rgba(37, 99, 235, 0.1) 0%,
+                    transparent 50%);
+            animation: lightEffect 20s ease-in-out infinite alternate;
+        }
+        
+        @keyframes lightEffect {
+            0% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.2);
+            }
+            100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+        }
+        
+        /* 动态玻璃卡片 */
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(23, 37, 84, 0.4);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
             border-radius: 24px;
             padding: 25px;
             margin: 15px 0;
-            box-shadow: 
-                0 4px 24px -1px rgba(0, 0, 0, 0.1),
-                0 6px 10px -1px rgba(0, 0, 0, 0.04),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
         
-        .glass-card:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 
-                0 20px 40px -4px rgba(0, 0, 0, 0.15),
-                0 12px 20px -4px rgba(0, 0, 0, 0.08),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle,
+                rgba(59, 130, 246, 0.1) 0%,
+                transparent 60%
+            );
+            animation: cardLight 8s ease-in-out infinite;
+        }
+        
+        @keyframes cardLight {
+            0% {
+                transform: translate(-30%, -30%) rotate(0deg);
+            }
+            50% {
+                transform: translate(30%, 30%) rotate(180deg);
+            }
+            100% {
+                transform: translate(-30%, -30%) rotate(360deg);
+            }
         }
         
         /* 炫彩文字效果 */
         .rainbow-text {
             background: linear-gradient(
                 to right,
-                #ff6b6b,
-                #f9844a,
-                #fee440,
-                #02c39a,
-                #4361ee,
-                #7209b7
+                #3b82f6,  /* 亮蓝色 */
+                #60a5fa,  /* 天蓝色 */
+                #93c5fd,  /* 浅蓝色 */
+                #2563eb   /* 深蓝色 */
             );
             -webkit-background-clip: text;
             background-clip: text;
@@ -102,9 +154,9 @@ class GameGuideWeb:
             }
         }
         
-        /* 现代按钮样式 */
-        .modern-button {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        /* 按钮样式 */
+        .stButton > button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);  /* 蓝色渐变 */
             color: white;
             border: none;
             padding: 12px 24px;
@@ -116,7 +168,7 @@ class GameGuideWeb:
             overflow: hidden;
         }
         
-        .modern-button::before {
+        .stButton > button::before {
             content: '';
             position: absolute;
             top: 0;
@@ -132,8 +184,14 @@ class GameGuideWeb:
             transition: 0.5s;
         }
         
-        .modern-button:hover::before {
+        .stButton > button:hover::before {
             left: 100%;
+        }
+        
+        .stButton > button:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         /* 3D卡片效果 */
@@ -175,19 +233,19 @@ class GameGuideWeb:
             }
         }
         
-        /* 自定义滚动条 */
+        /* 滚动条样式 */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
         
         ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(23, 37, 84, 0.3);
             border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(45deg, #6e8efb, #a777e3);
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
             border-radius: 4px;
             transition: all 0.3s ease;
         }
@@ -196,11 +254,11 @@ class GameGuideWeb:
             background: linear-gradient(45deg, #a777e3, #6e8efb);
         }
         
-        /* 输入框美化 */
+        /* 输入框样式 */
         .stTextInput>div>div>input,
         .stTextArea>div>div>textarea {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(23, 37, 84, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.2);
             border-radius: 12px;
             color: white;
             padding: 12px 20px;
@@ -213,13 +271,13 @@ class GameGuideWeb:
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
         }
         
-        /* 标签页样式优化 */
+        /* 标签页样式 */
         .stTabs [data-baseweb="tab-list"] {
             gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(23, 37, 84, 0.3);
             padding: 10px;
             border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
         
         .stTabs [data-baseweb="tab"] {
@@ -231,7 +289,7 @@ class GameGuideWeb:
         }
         
         .stTabs [data-baseweb="tab"][aria-selected="true"] {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(59, 130, 246, 0.3);
             color: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
@@ -299,17 +357,15 @@ class GameGuideWeb:
             margin-top: 2rem;
             padding: 0.8rem 3rem;
             font-size: 1.2rem;
-            background: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
-            border: 2px solid white;
+            border: none;
             border-radius: 50px;
             transition: all 0.3s ease;
         }
         
         .stButton > button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
         }
         
         @keyframes slideUp {
@@ -354,19 +410,19 @@ class GameGuideWeb:
         
         /* 标签页样式优化 */
         .stTabs {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.3);
             padding: 20px;
             border-radius: 15px;
             margin-top: 2rem;
         }
         
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 2rem;
             margin: 1rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(78, 91, 112, 0.2);
         }
         
         /* 内容区域样式 */
@@ -412,23 +468,70 @@ class GameGuideWeb:
         }
         
         /* 流星效果 */
-        .shooting-star {
+        .shooting-stars {
             position: fixed;
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, #ffffff, transparent);
-            animation: shooting 3s infinite ease-out;
-            opacity: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
         
-        @keyframes shooting {
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(59, 130, 246, 0.8), 
+                rgba(37, 99, 235, 0.4), 
+                transparent);
+            animation: shootingStars 3s linear infinite;
+        }
+        
+        @keyframes shootingStars {
             0% {
                 transform: translateX(-100%) translateY(0) rotate(-45deg);
                 opacity: 1;
             }
             100% {
-                transform: translateX(200%) translateY(200%) rotate(-45deg);
+                transform: translateX(200%) translateY(300%) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 气泡效果 */
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .bubble {
+            position: absolute;
+            background: radial-gradient(
+                circle at 50% 50%,
+                rgba(59, 130, 246, 0.2),
+                rgba(37, 99, 235, 0.1)
+            );
+            border-radius: 50%;
+            animation: floatBubble linear infinite;
+        }
+        
+        @keyframes floatBubble {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
                 opacity: 0;
             }
         }
@@ -448,55 +551,485 @@ class GameGuideWeb:
             0%, 100% { transform: scale(1); opacity: 0.3; }
             50% { transform: scale(1.2); opacity: 0.5; }
         }
-        </style>
         
-        <script>
-        // 创建梦幻泡泡
-        function createBubbles() {
-            const container = document.body;
-            for (let i = 0; i < 20; i++) {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                bubble.style.width = Math.random() * 30 + 10 + 'px';
-                bubble.style.height = bubble.style.width;
-                bubble.style.left = Math.random() * 100 + 'vw';
-                bubble.style.top = Math.random() * 100 + 'vh';
-                bubble.style.animationDelay = Math.random() * 8 + 's';
-                container.appendChild(bubble);
+        /* 侧边栏样式 */
+        .sidebar .sidebar-content {
+            background: linear-gradient(
+                180deg,
+                rgba(15, 23, 42, 0.95),
+                rgba(23, 37, 84, 0.95)
+            );
+            border-right: 1px solid rgba(59, 130, 246, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .sidebar .sidebar-content > div {
+            background: transparent !important;
+        }
+        
+        /* 文字颜色 */
+        p, li {
+            color: rgba(226, 232, 240, 0.85);  /* 浅灰蓝色文字 */
+        }
+        
+        h1, h2, h3, h4 {
+            color: rgba(241, 245, 249, 0.95);  /* 近白色标题 */
+        }
+        
+        /* 导航菜单项样式 */
+        .stRadio > label {
+            background: rgba(30, 58, 138, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .stRadio > label:hover {
+            background: rgba(30, 58, 138, 0.5);
+            transform: translateX(5px);
+        }
+        
+        /* 状态卡片样式 */
+        .status-card {
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+        
+        .status-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .status-icon {
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .status-desc {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .attribute-card {
+            background: rgba(30, 58, 138, 0.4);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        /* 导航菜单图标动画 */
+        .sidebar .sidebar-content img,
+        .sidebar .sidebar-content svg {
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar .sidebar-content img:hover,
+        .sidebar .sidebar-content svg:hover {
+            transform: scale(1.1);
+        }
+        
+        /* 选中状态样式 */
+        .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] > div:first-child {
+            background-color: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        
+        .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"][aria-checked="true"] {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateX(10px);
+        }
+        
+        /* 侧边栏头部样式 */
+        .sidebar-header {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            background: rgba(30, 58, 138, 0.3);
+        }
+        
+        .sidebar-header h2 {
+            color: white;
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 脉冲logo动画 */
+        .logo-pulse {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            border-radius: 50%;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        .logo-pulse::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: inherit;
+            border-radius: inherit;
+            animation: pulse-ring 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+            }
+            50% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0.95);
             }
         }
         
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* 导航菜单项样式 */
+        .sidebar .sidebar-content [data-testid="stRadio"] > div {
+            padding: 0.5rem;
+        }
+        
+        .sidebar .sidebar-content [data-testid="stRadio"] label {
+            background: rgba(30, 58, 138, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar .sidebar-content [data-testid="stRadio"] label:hover {
+            background: rgba(30, 58, 138, 0.4);
+            transform: translateX(5px);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        
+        /* 选中状态样式 */
+        .sidebar .sidebar-content [data-testid="stRadio"] label[data-checked="true"] {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* 菜单图标样式 */
+        .sidebar .sidebar-content [data-testid="stRadio"] label span {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* 分割线样式 */
+        .sidebar .sidebar-content hr {
+            border-color: rgba(59, 130, 246, 0.2);
+            margin: 2rem 0;
+        }
+        
+        /* 滚动条样式 */
+        .sidebar .sidebar-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar .sidebar-content::-webkit-scrollbar-track {
+            background: rgba(30, 58, 138, 0.1);
+        }
+        
+        .sidebar .sidebar-content::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 3px;
+        }
+        
+        .sidebar .sidebar-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.5);
+        }
+        
+        /* 导航菜单容器 */
+        .nav-menu {
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .nav-menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        /* 导航菜单项 */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(30, 58, 138, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background: rgba(30, 58, 138, 0.4);
+            transform: translateX(5px);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: white;
+        }
+        
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            color: white;
+        }
+        
+        /* 导航图标 */
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-right: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover .nav-icon {
+            background: rgba(59, 130, 246, 0.2);
+            transform: scale(1.1);
+        }
+        
+        /* 导航文字 */
+        .nav-text {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        /* 移除原有的标题样式 */
+        .sidebar .sidebar-content [data-testid="stMarkdown"] h3 {
+            display: none;
+        }
+        
+        /* 优化侧边栏整体样式 */
+        .sidebar .sidebar-content {
+            background: linear-gradient(
+                180deg,
+                rgba(15, 23, 42, 0.95),
+                rgba(23, 37, 84, 0.95)
+            );
+            border-right: 1px solid rgba(59, 130, 246, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 优化滚动条 */
+        .sidebar .sidebar-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar .sidebar-content::-webkit-scrollbar-track {
+            background: rgba(30, 58, 138, 0.1);
+        }
+        
+        .sidebar .sidebar-content::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 3px;
+        }
+        
+        .sidebar .sidebar-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.5);
+        }
+        
+        /* 页面标题样式 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: rgba(30, 58, 138, 0.2);
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .page-header h2 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        /* 表单样式 */
+        [data-testid="stForm"] {
+            background: rgba(30, 58, 138, 0.2);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .stTextInput input, .stTextArea textarea {
+            background: rgba(23, 37, 84, 0.3) !important;
+            border: 1px solid rgba(59, 130, 246, 0.2) !important;
+            color: white !important;
+        }
+        
+        .stSelectbox [data-baseweb="select"] {
+            background: rgba(23, 37, 84, 0.3) !important;
+            border: 1px solid rgba(59, 130, 246, 0.2) !important;
+        }
+        
+        /* 指南卡片样式 */
+        .guide-card {
+            height: 100%;
+            padding: 1.5rem;
+        }
+        
+        .guide-card h4 {
+            color: white;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .guide-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+        
+        .guide-card li {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .guide-card li:before {
+            content: '•';
+            color: #3b82f6;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* 提交按钮样式 */
+        .stButton button {
+            width: 100%;
+            padding: 0.8rem !important;
+            font-size: 1.1rem !important;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .stButton button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        </style>
+        
+        <script>
         // 创建流星
         function createShootingStars() {
-            const container = document.body;
+            const container = document.createElement('div');
+            container.className = 'shooting-stars';
+            document.body.appendChild(container);
+            
             setInterval(() => {
                 const star = document.createElement('div');
                 star.className = 'shooting-star';
                 star.style.top = Math.random() * 50 + 'vh';
-                star.style.left = '0';
+                star.style.left = Math.random() * 100 + 'vw';
                 container.appendChild(star);
+                
                 setTimeout(() => star.remove(), 3000);
-            }, 4000);
+            }, 2000);
         }
         
-        // 创建光晕
-        function createGlows() {
-            const container = document.body;
-            for (let i = 0; i < 5; i++) {
-                const glow = document.createElement('div');
-                glow.className = 'glow';
-                glow.style.left = Math.random() * 100 + 'vw';
-                glow.style.top = Math.random() * 100 + 'vh';
-                glow.style.animationDelay = Math.random() * 4 + 's';
-                container.appendChild(glow);
-            }
+        // 创建气泡
+        function createBubbles() {
+            const container = document.createElement('div');
+            container.className = 'bubbles';
+            document.body.appendChild(container);
+            
+            setInterval(() => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                
+                // 随机大小
+                const size = Math.random() * 30 + 10;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                
+                // 随机位置
+                bubble.style.left = Math.random() * 100 + 'vw';
+                
+                // 随机动画时间
+                const duration = Math.random() * 10 + 5;
+                bubble.style.animation = `floatBubble ${duration}s linear infinite`;
+                
+                container.appendChild(bubble);
+                setTimeout(() => bubble.remove(), duration * 1000);
+            }, 500);
         }
         
-        // 页面加载时创建效果
+        // 页面加载时初始化效果
         document.addEventListener('DOMContentLoaded', () => {
-            createBubbles();
             createShootingStars();
-            createGlows();
+            createBubbles();
+        });
+        
+        // 添加导航菜单交互
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
         });
         </script>
         """, unsafe_allow_html=True)
@@ -544,18 +1077,96 @@ class GameGuideWeb:
             # 侧边栏
             with st.sidebar:
                 st.markdown("""
-                <div style="text-align: center; padding: 20px;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; animation: pulse 2s infinite;">
+                <div class="sidebar-header">
+                    <div class="logo-pulse"></div>
+                    <h2>✨ 梦幻指南</h2>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # 获取当前选择的菜单项
+                selection = st.radio(
+                    "",
+                    list(self.guide.main_menu.values()),
+                    label_visibility="collapsed"
+                )
+                
+                # 根据选择更新导航菜单的激活状态
+                active_class = {
+                    "游戏攻略": " active" if selection == "游戏攻略" else "",
+                    "意见征集": " active" if selection == "意见征集" else "",
+                    "工作室招募(暂时关闭)": " active" if selection == "工作室招募(暂时关闭)" else ""
+                }
+                
+                st.markdown(f"""
+                <div class="nav-menu">
+                    <div class="nav-menu-items">
+                        <label class="nav-item{active_class['游戏攻略']}">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-text">游戏攻略</span>
+                        </label>
+                        <label class="nav-item{active_class['意见征集']}">
+                            <span class="nav-icon">💡</span>
+                            <span class="nav-text">意见征集</span>
+                        </label>
+                        <label class="nav-item{active_class['工作室招募(暂时关闭)']}">
+                            <span class="nav-icon">🏢</span>
+                            <span class="nav-text">工作室招募</span>
+                        </label>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
                 
-                st.markdown("### 🎮 导航菜单")
-                selection = st.radio(
-                    "",
-                    list(self.guide.main_menu.values()),
-                    format_func=lambda x: f"{'🎯' if x == '游戏攻略' else '💡' if x == '意见征集' else '🏢'} {x}"
-                )
+                # 更新CSS样式
+                st.markdown("""
+                <style>
+                /* 导航菜单项样式 */
+                .nav-item {
+                    display: flex;
+                    align-items: center;
+                    padding: 1rem 1.2rem;
+                    background: rgba(30, 58, 138, 0.2);
+                    border: 1px solid rgba(59, 130, 246, 0.2);
+                    border-radius: 12px;
+                    color: rgba(255, 255, 255, 0.8);
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    margin-bottom: 0.8rem;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+                
+                .nav-item:hover {
+                    background: rgba(30, 58, 138, 0.4);
+                    transform: translateX(5px);
+                    border-color: rgba(59, 130, 246, 0.4);
+                    color: white;
+                }
+                
+                .nav-item.active {
+                    background: rgba(59, 130, 246, 0.3);
+                    border-color: rgba(59, 130, 246, 0.6);
+                    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+                    color: white;
+                }
+                
+                /* 让radio按钮可以点击但不可见 */
+                [data-testid="stRadio"] {
+                    position: absolute;
+                    opacity: 0;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    z-index: 1;
+                }
+                
+                .nav-menu {
+                    position: relative;
+                    z-index: 0;
+                }
+                </style>
+                """, unsafe_allow_html=True)
             
             # 主要内容区域
             if selection == "游戏攻略":
@@ -572,7 +1183,7 @@ class GameGuideWeb:
                 
                 # 使用tabs来组织内容
                 tabs = st.tabs([
-                    "🎮 基础指南", "⚔️ 职业系统", "💫 状态属性", "✨ 特色玩法", "📝 更新日志"
+                    "🎮 基础指南", "⚔️ 职业系统", "💪 状态属性", "✨ 特色玩法", "📝 更新日志"
                 ])
                 
                 with tabs[0]:
@@ -609,62 +1220,94 @@ class GameGuideWeb:
         """, unsafe_allow_html=True)
             
     def show_feedback(self):
+        """显示意见征集页面"""
         st.markdown('<div class="fade-in">', unsafe_allow_html=True)
-        st.markdown("## 💫 意见征集")
+        st.markdown("""
+        <div class="page-header">
+            <h2>💡 意见征集</h2>
+            <p>您的反馈对我们很重要，帮助我们打造更好的游戏体验！</p>
+        </div>
+        """, unsafe_allow_html=True)
         
+        # 创建两列布局
         col1, col2 = st.columns([2, 1])
         
         with col1:
             with st.form("feedback_form"):
+                # 反馈类型选择
                 feedback_type = st.selectbox(
                     "选择反馈类型",
-                    list(self.guide.feedback_submenu.values())
+                    list(self.guide.feedback_submenu.values()),
+                    format_func=lambda x: {
+                        "职业意见": "⚔️ 职业平衡",
+                        "装备意见": "🛡️ 装备系统",
+                        "怪物意见": "👾 怪物设计",
+                        "BOSS意见": "👑 BOSS机制",
+                        "梦灵意见": "✨ 梦灵系统",
+                        "饰品意见": "💎 饰品系统"
+                    }.get(x, x)
                 )
                 
+                # 反馈内容
                 feedback_text = st.text_area(
-                    "分享您的想法",
+                    "详细描述",
                     height=200,
-                    placeholder="您的意见对我们很重要..."
+                    placeholder="请详细描述您的想法、建议或遇到的问题..."
                 )
                 
-                col_a, col_b = st.columns(2)
-                with col_a:
-                    name = st.text_input("昵称（选填）")
-                with col_b:
-                    contact = st.text_input("联系方式（选填）")
+                # 联系方式（可选）
+                contact = st.text_input(
+                    "联系方式（选填）",
+                    placeholder="QQ/微信/邮箱，方便我们与您进一步交流"
+                )
                 
-                submitted = st.form_submit_button("✨ 提交反馈")
+                # 图片上传（可选）
+                uploaded_file = st.file_uploader(
+                    "上传截图（可选）",
+                    type=['png', 'jpg', 'jpeg'],
+                    help="支持PNG/JPG格式，大小不超过2MB"
+                )
                 
-                if submitted:
-                    if feedback_text.strip():
-                        with st.spinner('提交中...'):
-                            # 保存反馈数据
+                # 提交按钮
+                submit = st.form_submit_button("📮 提交反馈")
+                
+                if submit:
+                    if feedback_text:
+                        with st.spinner('正在提交...'):
                             feedback_data = {
                                 'type': feedback_type,
                                 'content': feedback_text,
-                                'name': name or '匿名',
                                 'contact': contact,
+                                'has_image': bool(uploaded_file)
                             }
                             if self.api.save_feedback(feedback_data):
-                                st.success("🎉 感谢您的反馈！")
+                                st.success("🎉 感谢您的反馈！我们会认真考虑您的建议。")
                                 st.balloons()
-                            else:
-                                st.error("保存失败，请稍后重试")
                     else:
-                        st.error("❌ 请输入反馈内容")
+                        st.error("请填写反馈内容")
         
         with col2:
+            # 反馈指南
             st.markdown("""
-            <div class="glass-card">
-                <h4>🌟 反馈指南</h4>
+            <div class="glass-card guide-card">
+                <h4>📝 反馈指南</h4>
                 <ul>
-                    <li>清晰描述您的想法</li>
-                    <li>可以附上截图说明</li>
-                    <li>建议提供联系方式</li>
+                    <li>请选择合适的反馈类型</li>
+                    <li>详细描述您的想法和建议</li>
+                    <li>可以附上截图以更好地说明问题</li>
+                    <li>留下联系方式以便我们进一步交流</li>
+                </ul>
+                
+                <h4>🎯 反馈重点</h4>
+                <ul>
+                    <li>游戏平衡性问题</li>
+                    <li>体验优化建议</li>
+                    <li>Bug反馈</li>
+                    <li>新功能建议</li>
                 </ul>
             </div>
             """, unsafe_allow_html=True)
-            
+
     def show_recruitment(self):
         st.markdown('<div class="fade-in">', unsafe_allow_html=True)
         st.markdown("## 🏢 工作室招募")
@@ -716,35 +1359,74 @@ class GameGuideWeb:
         """显示状态属性内容"""
         content = self.api.get_game_content("状态属性")
         
-        col1, col2 = st.columns(2)
+        # 定义状态图标映射
+        status_icons = {
+            "生命值": "❤️",
+            "魔法值": "🔮",
+            "攻击力": "⚔️",
+            "防御力": "🛡️",
+            "眩晕": "💫",
+            "中毒": "☠️",
+            "虚弱": "😫",
+            "加速": "⚡",
+            "物理抗性": "🏰",
+            "魔法抗性": "✨",
+            "控制抗性": "🛑"
+        }
+        
+        col1, col2, col3 = st.columns([1, 1, 1])
         
         with col1:
             st.markdown("""
-            <div class="glass-card">
+            <div class="attribute-card">
                 <h3 style="color: white;">基础属性</h3>
             </div>
             """, unsafe_allow_html=True)
             
             for attr, desc in content['基础属性'].items():
                 st.markdown(f"""
-                <div class="glass-card">
-                    <h4 style="color: white;">{attr}</h4>
-                    <p>{desc}</p>
+                <div class="glass-card status-card">
+                    <div class="status-header">
+                        <span class="status-icon">{status_icons.get(attr, '🔹')}</span>
+                        <h4 style="color: white; margin: 0;">{attr}</h4>
+                    </div>
+                    <p class="status-desc">{desc}</p>
                 </div>
                 """, unsafe_allow_html=True)
         
         with col2:
             st.markdown("""
-            <div class="glass-card">
+            <div class="attribute-card">
                 <h3 style="color: white;">特殊状态</h3>
             </div>
             """, unsafe_allow_html=True)
             
             for status, effect in content['特殊状态'].items():
                 st.markdown(f"""
-                <div class="glass-card">
-                    <h4 style="color: white;">{status}</h4>
-                    <p>{effect}</p>
+                <div class="glass-card status-card">
+                    <div class="status-header">
+                        <span class="status-icon">{status_icons.get(status, '🔸')}</span>
+                        <h4 style="color: white; margin: 0;">{status}</h4>
+                    </div>
+                    <p class="status-desc">{effect}</p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+        with col3:
+            st.markdown("""
+            <div class="attribute-card">
+                <h3 style="color: white;">抗性系统</h3>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            for resistance, desc in content['抗性系统'].items():
+                st.markdown(f"""
+                <div class="glass-card status-card">
+                    <div class="status-header">
+                        <span class="status-icon">{status_icons.get(resistance, '🔰')}</span>
+                        <h4 style="color: white; margin: 0;">{resistance}</h4>
+                    </div>
+                    <p class="status-desc">{desc}</p>
                 </div>
                 """, unsafe_allow_html=True)
 
